@@ -5,15 +5,38 @@ using UnityEngine.SceneManagement;
 
 public class PlayGame : MonoBehaviour
 {
+    float hueValue;
+
 
     void Start()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SetMenuColor();
     }
 
+    void Update()
+    {
+
+    }
+
+    void SetMenuColor()
+    {
+        hueValue = Random.Range(0f, 1f);
+        Camera.main.backgroundColor = Color.HSVToRGB(hueValue, 0.6f, 0.8f);
+    }
 
     void Quit()
     {
+        Application.Quit();
+    }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("Game");
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Quit!");
         Application.Quit();
     }
 }

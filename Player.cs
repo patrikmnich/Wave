@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
         SetBackgroundColor();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (isDead == true) return;
         MovePlayer();
@@ -45,9 +45,9 @@ public class Player : MonoBehaviour
     void MovePlayer()
     {
         Vector2 pos = transform.position;
-        pos.x = Mathf.Cos(angle) * 3;
+        pos.x = Mathf.Cos(angle) * 100;
         transform.position = pos;
-        angle += Time.deltaTime * xSpeed;
+        angle += Time.fixedDeltaTime * xSpeed;
     }
 
     void GetInput()
@@ -80,17 +80,26 @@ public class Player : MonoBehaviour
         {
             GetItem(collision);
         }
+        else if (collision.gameObject.tag == "ScoreLine")
+        {
+            GetScoreLine(collision);
+        }
 
     }
 
     void GetItem(Collider2D collision)
     {
         SetBackgroundColor();
-
-        gameManager.AddScore();
         gameManager.AddTime();
+        gameManager.AddCurrency();
         Destroy(Instantiate(itemEffectObj, collision.gameObject.transform.position, Quaternion.identity), 0.5f);
         Destroy(collision.gameObject.transform.parent.gameObject);
+    }
+
+    void GetScoreLine(Collider2D collision)
+    {
+        gameManager.AddScore();
+        //Destroy(collision.gameObject.transform.parent.gameObject);
     }
 
     void Dead()
@@ -103,7 +112,6 @@ public class Player : MonoBehaviour
         StopPlayer();
 
         gameManager.CallGameOver();
-        Debug.Log("volal si ma?");
 
     }
 
@@ -124,7 +132,15 @@ public class Player : MonoBehaviour
 
     void SetBackgroundColor()
     {
+        //TODO: link score/timer text to darker color of hueValue
         Camera.main.backgroundColor = Color.HSVToRGB(hueValue, 0.6f, 0.8f);
+        gameManager.currentScoreText.color = Color.HSVToRGB(hueValue, 0.7f, 0.9f);
+        gameManager.bestScoreString.color = Color.HSVToRGB(hueValue, 0.7f, 0.9f);
+        gameManager.scoreTextString.color = Color.HSVToRGB(hueValue, 0.7f, 0.9f);
+        gameManager.bestScoreText.color = Color.HSVToRGB(hueValue, 0.7f, 0.9f);
+        gameManager.timerText.color = Color.HSVToRGB(hueValue, 0.7f, 0.9f);
+        gameManager.currencyText.color = Color.HSVToRGB(hueValue, 0.7f, 0.9f);
+
         hueValue += 0.1f;
         if (hueValue >= 1)
         {

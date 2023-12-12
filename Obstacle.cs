@@ -11,17 +11,17 @@ public class Obstacle : MonoBehaviour
     public bool FadeOut;
     public bool FadeIn = false;
 
-    private int interpolationFramesCount = 320; // Number of frames to completely interpolate between the 2 positions
+    private int interpolationFramesCount = 25; // Number of frames to completely interpolate between the 2 positions
     public int collisionOffTime;
     private int collisionOffTimeCounter;
     private int elapsedFrames = 0;
-
-    public bool isDead = false;
 
     private Color startingColor;
     private Color alphaZero;
     private Color interpolateColor;
     BoxCollider2D obstacle_Collider;
+
+    Player player;
 
 
     void Awake()
@@ -30,11 +30,12 @@ public class Obstacle : MonoBehaviour
         startingColor = alphaZero = obj.GetComponent<SpriteRenderer>().material.color;
         alphaZero.a = 0f;
         collisionOffTimeCounter = collisionOffTime;
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if (isDead == false)
+        if (player.isDead == false)
         {
 
             if (RotationSpeed != 0)
@@ -57,14 +58,12 @@ public class Obstacle : MonoBehaviour
                     obstacle_Collider.enabled = false;
                     if (collisionOffTimeCounter == 0)
                     {
-                        obstacle_Collider.enabled = true;
                         FadeOut = false;
                         FadeIn = true;
                         elapsedFrames = 0;
                         collisionOffTimeCounter = collisionOffTime;
-                        Debug.Log("turning collision back on");
+                        //Debug.Log("turning collision back on");
                     }
-                    //obstacle_Collider.enabled = true;
                 }
             }
 
@@ -74,6 +73,11 @@ public class Obstacle : MonoBehaviour
                 interpolateColor = Color.Lerp(alphaZero, startingColor, interpolationRatio);
                 obj.GetComponent<SpriteRenderer>().material.color = interpolateColor;
                 elapsedFrames++;
+
+                if (interpolateColor.a > 0.1)
+                {
+                    obstacle_Collider.enabled = true;
+                }
 
                 if (interpolateColor == startingColor)
                 {
@@ -88,14 +92,7 @@ public class Obstacle : MonoBehaviour
 
     void Rotation()
     {
-        transform.Rotate(Vector3.forward * Time.deltaTime * RotationSpeed);
+        transform.Rotate(Vector3.forward * Time.fixedDeltaTime * RotationSpeed);
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            isDead = true;
-        }
-    }
 }
