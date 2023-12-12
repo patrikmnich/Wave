@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayGame : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
     float hueValue;
 
@@ -24,14 +24,14 @@ public class PlayGame : MonoBehaviour
         Camera.main.backgroundColor = Color.HSVToRGB(hueValue, 0.6f, 0.8f);
     }
 
-    void Quit()
-    {
-        Application.Quit();
-    }
-
     public void StartGame()
     {
         SceneManager.LoadScene("Game");
+    }
+
+    public void OpenShop()
+    {
+        SceneManager.LoadScene("Shop");
     }
 
     public void QuitGame()

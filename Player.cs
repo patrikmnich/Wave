@@ -36,13 +36,13 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         if (isDead == true) return;
-        MovePlayer();
+        Oscilate();
         GetInput();
         CheckTime();
 
     }
 
-    void MovePlayer()
+    void Oscilate()
     {
         Vector2 pos = transform.position;
         pos.x = Mathf.Cos(angle) * 100;
