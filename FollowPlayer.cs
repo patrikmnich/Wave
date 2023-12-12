@@ -19,7 +19,7 @@ public class FollowPlayer : MonoBehaviour
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
         if (player.isDead == false)
         {
